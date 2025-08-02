@@ -1,0 +1,30 @@
+:global(*) {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+body, html {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  overflow: hidden;
+  background: url("/img/background.jpeg") no-repeat center center fixed;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+.page {
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+
+.content {
+  background-color: rgba(196, 196, 196, 0.75); /* blanc transparent */
+  border-radius: 20px;
+  padding: 20px;
+}
