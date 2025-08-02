@@ -65,12 +65,13 @@ if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 		if (event.url.pathname === '/api' + callback) {
 			throw redirect(302, issuer);
 		} else if (event.url.pathname === callback) {
-			const expires_in = Number(event.url.searchParams.get('expires_in') || 0);
+			const expires_in = Math.floor(Number(event.url.searchParams.get('expires_at')) - Date.now() / 1000);
 			for (const param of authFields) {
 				event.cookies.set(param, event.url.searchParams.get(param) || '', {
 					path: '/',
 					httpOnly: true,
-					maxAge: expires_in
+					maxAge: expires_in,
+					secure: true
 				});
 			}
 			throw redirect(302, `/${lang}`);

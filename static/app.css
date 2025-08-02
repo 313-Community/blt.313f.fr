@@ -10,7 +10,6 @@ body, html {
   width: 100vw;
   margin: 0;
   overflow: hidden;
-  background: url("/img/background.jpeg") no-repeat center center fixed;
 }
 
 body {

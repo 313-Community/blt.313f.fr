@@ -1,15 +1,15 @@
 <script lang="ts">
   import { page } from "$app/state";
   import duration from "humanize-duration";
-  import { languages } from "$lib/translation";
+  import { defaultLanguage, languages, supportedLanguages } from "$lib/translation";
 
   const { data } = $props();
   const battle_life_time = $derived(data.private.battle_life_time * 1000);
   const created_at = $derived(data.created_at * 1000);
   const percentage = $derived(Math.round(1000 * battle_life_time / (Date.now() - created_at)) / 10);
 
-  const lang = $derived(page.params.lang || 'en');
-  const language = $derived(languages[lang]);
+  const lang = $derived(page.params.lang || defaultLanguage);
+  const language = $derived(supportedLanguages.includes(lang) ? languages[lang] : languages[defaultLanguage]);
 </script>
 
 <div class="page">
@@ -25,7 +25,7 @@
   </div>
   <div class="content">
     <h3>
-      {language.blt.percentage.replace('%percentage%', percentage)}
+      {language.blt.percentage.replace('%percentage%', String(percentage))}
       <input type="range" value={percentage} min="0" max="100"/>
     </h3>
   </div>

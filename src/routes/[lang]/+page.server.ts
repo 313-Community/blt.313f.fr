@@ -17,6 +17,10 @@ export const load: PageServerLoad = async ({ cookies, fetch, params }: ServerLoa
 	url.searchParams.set('language', lang);
 	url.searchParams.set('fields', 'private.battle_life_time,created_at');
 	const res = await fetch(url);
-	const { data } = await res.json();
-	return data[account_id];
+	try {
+		const { data } = await res.json();
+		return data[account_id];
+	} catch {
+		return { private: { battle_life_time: 0 }, created_at: Date.now() };
+	}
 };
