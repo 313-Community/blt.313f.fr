@@ -29,7 +29,8 @@
     {@render children?.()}
   </div>
   <div class="github">
-    <a href="https://github.com/313-Community/blt.313f.fr">
+    <a href="https://github.com/313-Community/blt.313f.fr/blob/main/src/lib/translation.ts"
+       target="_blank" rel="noopener noreferrer">
       <div class="content">
         {language.layout.github}
       </div>
