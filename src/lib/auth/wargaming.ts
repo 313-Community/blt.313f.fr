@@ -1,7 +1,6 @@
 import { ORIGIN, CLIENT_ID } from '$env/static/private';
 import { handlers, type Provider, providers } from '$lib/auth';
 import { redirect } from '@sveltejs/kit';
-import { defaultLanguage } from '$lib/translation';
 
 export type WGToken = {
 	access_token: string;
@@ -61,7 +60,6 @@ export const authFields = ['access_token', 'account_id'];
 
 if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 	handlers.push(async ({ event, resolve }) => {
-		const lang = event.params.lang || defaultLanguage;
 		if (event.url.pathname === '/api' + callback) {
 			throw redirect(302, issuer);
 		} else if (event.url.pathname === callback) {
@@ -74,7 +72,7 @@ if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 					secure: true
 				});
 			}
-			throw redirect(302, `/${lang}`);
+			throw redirect(302, '/');
 		}
 		return resolve(event);
 	});
