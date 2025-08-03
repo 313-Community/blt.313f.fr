@@ -21,6 +21,6 @@ export const load: PageServerLoad = async ({ cookies, fetch, params }: ServerLoa
 		const { data } = await res.json();
 		return data[account_id];
 	} catch {
-		return { private: { battle_life_time: 0 }, created_at: Date.now() };
+		return { private: { battle_life_time: 0 }, created_at: Date.now() / 1000 };
 	}
 };
