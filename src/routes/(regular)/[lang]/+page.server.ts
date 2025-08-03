@@ -4,7 +4,7 @@ import { redirect, type ServerLoadEvent } from '@sveltejs/kit';
 import { defaultLanguage } from '$lib/translation';
 
 export const load: PageServerLoad = async ({ cookies, fetch, params }: ServerLoadEvent) => {
-	const lang = params.lang || defaultLanguage;
+	const lang = params.lang || defaultLanguage
 	const access_token = cookies.get('access_token');
 	const account_id = cookies.get('account_id');
 	if (!access_token || !account_id) {
