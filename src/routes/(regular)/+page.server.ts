@@ -5,7 +5,7 @@ import { cookieName, verifToken } from '$lib/auth/wargaming';
 
 export const load: PageServerLoad = async ({ cookies, fetch }: ServerLoadEvent) => {
   const { realm: _realm, access_token, account_id } = verifToken(cookies.get(cookieName) || '') || { realm: 'eu' };
-  const realm = _realm.toLowerCase() === 'na' ? 'com' : _realm;
+  const realm = _realm?.toLowerCase() === 'na' ? 'com' : _realm;
   if ( !access_token || !account_id ) {
     throw redirect(302, '/login');
   }
