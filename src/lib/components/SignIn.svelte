@@ -5,13 +5,14 @@
 
   let { children, render, providers, redirectTo = '/' }: {
     children?: Snippet,
-    render: Snippet<[ Provider, (provider: Provider) => void ]>,
+    render: Snippet<[ Provider, (provider: Provider, options: Record<string, string>) => void ]>,
     providers: Provider[],
     redirectTo?: string
   } = $props();
 
-  function signIn(provider: Provider) {
-    const params = new URLSearchParams({ redirectTo }).toString();
+  function signIn(provider: Provider, options: Record<string, string> = {}): Promise<void> {
+    console.log('params', options);
+    const params = new URLSearchParams({ redirectTo, ...options }).toString();
     return goto('/api/auth/callback/' + provider.id + '?' + params);
   }
 </script>

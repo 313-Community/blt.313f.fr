@@ -6,6 +6,9 @@
   let { data } = $props();
   const { providers } = $derived(data);
 
+  const realms = [ 'EU', 'NA', 'ASIA' ];
+  let realm = $state(realms[0]);
+
   const language = $derived(languages[lang()]);
 
   function getTextColor(backgroundColor: string): string {
@@ -35,11 +38,18 @@
   <div class="signin content">
     <SignIn {providers}>
       {#snippet render(provider, signIn)}
-        <button type="button" onclick={() => signIn(provider)}
+        <button type="button" onclick={() => signIn(provider, { realm: realm.toLowerCase() === 'na' ? 'com' : realm })}
                 style:background-color={provider.color}
                 style:color={getTextColor(provider.color)}>
           <img src={provider.icon} alt={provider.id} height="32"/>
           {provider.name}
+          {#if provider.id === 'wargaming'}
+            <select bind:value={realm} onclick={e => e.stopPropagation()}>
+              {#each realms as r, i (i)}
+                <option value={r}>{r}</option>
+              {/each}
+            </select>
+          {/if}
         </button>
       {/snippet}
 

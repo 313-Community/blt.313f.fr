@@ -33,7 +33,8 @@
   <div class="content">
     <h3>
       {language.blt.percentage.replace('%percentage%', String(percentage))}
-      <input type="range" value={percentage} min="0" max="100"/>
+      <input type="range" value={percentage} min="0" max="100"
+             style:background="linear-gradient(to right, black 0%, black {percentage}%, #e0e0e0 {percentage}%, #e0e0e0 100%)"/>
     </h3>
   </div>
 </div>
@@ -42,7 +43,7 @@
   .page {
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* Étire les enfants à la même largeur */
+    align-items: stretch;
     justify-content: center;
     overflow: hidden;
     background-size: cover;
@@ -54,8 +55,6 @@
   }
 
   input[type="range"] {
-    --fill-color: black;
-    --track-color: #e0e0e0;
     width: 100%;
     height: 6px;
     background: transparent;
@@ -65,13 +64,7 @@
     appearance: none;
   }
 
-  /* Webkit (Chrome, Safari) */
-  input[type="range"]::-webkit-slider-runnable-track {
-    height: 6px;
-    background: var(--track-color);
-    border-radius: 3px;
-  }
-
+  /* Hide the input selector */
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -82,55 +75,19 @@
     box-shadow: none;
   }
 
-  input[type="range"]::-webkit-slider-thumb {
-    pointer-events: none;
-  }
-
-  input[type="range"]::-webkit-slider-runnable-track {
-    background: linear-gradient(
-      to right,
-      var(--fill-color) 0%,
-      var(--fill-color) calc(var(--value, 0) * 1%),
-      var(--track-color) calc(var(--value, 0) * 1%),
-      var(--track-color) 100%
-    );
-  }
-
-  /* Firefox */
-  input[type="range"]::-moz-range-track {
-    height: 6px;
-    background: var(--track-color);
-    border-radius: 3px;
-  }
-
-  input[type="range"]::-moz-range-progress {
-    height: 6px;
-    background: var(--fill-color);
-    border-radius: 3px;
-  }
-
   input[type="range"]::-moz-range-thumb {
     width: 0;
     height: 0;
-    border: none;
     background: transparent;
-  }
-
-  /* IE/Edge */
-  input[type="range"]::-ms-fill-lower {
-    background: var(--fill-color);
-    border-radius: 3px;
-  }
-
-  input[type="range"]::-ms-fill-upper {
-    background: var(--track-color);
-    border-radius: 3px;
+    border: none;
+    box-shadow: none;
   }
 
   input[type="range"]::-ms-thumb {
     width: 0;
     height: 0;
-    border: none;
     background: transparent;
+    border: none;
+    box-shadow: none;
   }
 </style>
