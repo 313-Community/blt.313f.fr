@@ -3,7 +3,8 @@ import type { PageServerLoad } from './$types';
 import { redirect, type ServerLoadEvent } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ cookies, fetch }: ServerLoadEvent) => {
-	const realm = cookies.get('realm') || 'eu';
+	const _realm = cookies.get('realm') || 'eu';
+	const realm = _realm.toLowerCase() === 'na' ? 'na' : _realm;
 	const access_token = cookies.get('access_token');
 	const account_id = cookies.get('account_id');
 	if (!access_token || !account_id) {
