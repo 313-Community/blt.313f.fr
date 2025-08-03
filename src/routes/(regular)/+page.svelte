@@ -1,26 +1,33 @@
 <script lang="ts">
-  import { page } from "$app/state";
   import duration from "humanize-duration";
-  import { defaultLanguage, languages, supportedLanguages } from "$lib/translation";
+  import { languages } from "$lib/translation";
+  import { lang } from "$lib/utils";
 
   const { data } = $props();
-  const battle_life_time = $derived(data.private.battle_life_time * 1000);
-  const created_at = $derived(data.created_at * 1000);
-  const percentage = $derived(Math.round(1000 * battle_life_time / (Date.now() - created_at)) / 10);
 
-  const lang = $derived(page.params.lang || defaultLanguage);
-  const language = $derived(supportedLanguages.includes(lang) ? languages[lang] : languages[defaultLanguage]);
+  const _lang = $derived(lang());
+  const _blt = $derived(data.private.battle_life_time * 1000);
+  const _created = $derived(data.created_at * 1000);
+
+  const battle_life_time = $derived(duration(_blt, { language: _lang }));
+  const as_hour = $derived(duration(Math.round(_blt / 3600) * 3600, { units: [ 'h' ], language: _lang }));
+  const created_at = $derived(new Date(_created).toLocaleString());
+  const percentage = $derived(Math.round(1000 * _blt / (Date.now() - _created)) / 10);
+
+  const language = $derived(languages[_lang]);
 </script>
 
 <div class="page">
   <div class="content">
     <h3>
-      {language.blt.time_played.replace('%battle_life_time%', duration(battle_life_time, { language: lang }))}
+      {language.blt.time_played.replace('%battle_life_time%', battle_life_time)}
+      <br/>
+      {language.blt.as_hour.replace('%as_hour%', as_hour)}
     </h3>
   </div>
   <div class="content">
     <h3>
-      {language.blt.created_at.replace('%created_at%', new Date(created_at).toLocaleString())}
+      {language.blt.created_at.replace('%created_at%', created_at)}
     </h3>
   </div>
   <div class="content">
@@ -33,18 +40,16 @@
 
 <style>
   .page {
-    min-height: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Étire les enfants à la même largeur */
     justify-content: center;
-    align-items: center;
     overflow: hidden;
     background-size: cover;
-    flex-direction: column;
     gap: 2rem;
   }
 
   .content {
-    width: 90%;
     text-align: center;
   }
 

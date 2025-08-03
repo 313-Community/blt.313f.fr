@@ -1,13 +1,12 @@
 <script lang="ts">
   import { SignIn } from "$lib/components";
-  import { page } from "$app/state";
-  import { defaultLanguage, languages, supportedLanguages } from "$lib/translation";
+  import { languages } from "$lib/translation";
+  import { lang } from "$lib/utils";
 
   let { data } = $props();
   const { providers } = $derived(data);
 
-  const lang = $derived(page.params.lang || defaultLanguage);
-  const language = $derived(supportedLanguages.includes(lang) ? languages[lang] : languages[defaultLanguage]);
+  const language = $derived(languages[lang()]);
 
   function getTextColor(backgroundColor: string): string {
     // Convertit la couleur hexadécimale en valeurs RGB
