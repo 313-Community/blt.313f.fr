@@ -62,12 +62,22 @@ export async function revokeToken(token: WGToken): Promise<boolean> {
 	return false;
 }
 
-const wg = {
+const wg: Provider = {
 	id: 'wargaming',
 	name: 'Wargaming',
 	icon: '/icon/wargaming.svg',
 	issuer: issuer.toString(),
-	color: '#ffffff'
+	color: '#ffffff',
+	selects: [
+		{
+			key: 'realm',
+			values: [
+				{ show: 'EU', actual: 'eu' },
+				{ show: 'NA', actual: 'com' },
+				{ show: 'ASIA', actual: 'asia' }
+			]
+		}
+	]
 };
 
 export const authFields = ['access_token', 'account_id'];

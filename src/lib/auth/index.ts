@@ -6,6 +6,7 @@ export type Provider = {
 	icon: string;
 	issuer: string;
 	color: string;
+	selects: { key: string; values: { show: string; actual: string }[] }[];
 };
 
 export const providers: Provider[] = [];

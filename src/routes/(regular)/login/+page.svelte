@@ -6,24 +6,7 @@
   let { data } = $props();
   const { providers } = $derived(data);
 
-  const realms = [ 'EU', 'NA', 'ASIA' ];
-  let realm = $state(realms[0]);
-
   const language = $derived(languages[lang()]);
-
-  function getTextColor(backgroundColor: string): string {
-    // Convertit la couleur hexadécimale en valeurs RGB
-    const hex = backgroundColor.replace('#', '');
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-
-    // Calcule la luminance relative
-    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-
-    // Retourne noir ou blanc en fonction de la luminance
-    return luminance > 186 ? '#000000' : '#FFFFFF';
-  }
 </script>
 
 <div class="page">
@@ -37,22 +20,6 @@
   </div>
   <div class="signin content">
     <SignIn {providers}>
-      {#snippet render(provider, signIn)}
-        <button type="button" onclick={() => signIn(provider, { realm: realm.toLowerCase() === 'na' ? 'com' : realm })}
-                style:background-color={provider.color}
-                style:color={getTextColor(provider.color)}>
-          <img src={provider.icon} alt={provider.id} height="32"/>
-          {provider.name}
-          {#if provider.id === 'wargaming'}
-            <select bind:value={realm} onclick={e => e.stopPropagation()}>
-              {#each realms as r, i (i)}
-                <option value={r}>{r}</option>
-              {/each}
-            </select>
-          {/if}
-        </button>
-      {/snippet}
-
       {language.connect.connect_with}
     </SignIn>
   </div>
@@ -77,25 +44,6 @@
 
   .signin {
     width: 30%;
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* Espace entre l'icône et le texte */
-    padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 10px;
-  }
-
-  button:hover {
-    opacity: 0.8;
-  }
-
-  img {
-    display: block;
   }
 
   @media (max-width: 768px) {
