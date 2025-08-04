@@ -13,11 +13,22 @@
   const as_hour = $derived(duration(Math.round(_blt / 3600) * 3600, { units: [ 'h' ], language: _lang }));
   const created_at = $derived(new Date(_created).toLocaleString());
   const percentage = $derived(Math.round(1000 * _blt / (Date.now() - _created)) / 10);
+  const nickname = $derived(data.nickname);
+  const realm = $derived(data.realm);
 
   const language = $derived(languages[_lang]);
 </script>
 
 <div class="page">
+  <div>
+    <a href="/auth/logout">
+      <div class="content">
+        <h2>
+          {language.connect.connected_as.replace('%nickname%', `${nickname} (${realm.toUpperCase()})`)}
+        </h2>
+      </div>
+    </a>
+  </div>
   <div class="content">
     <h3>
       {language.blt.time_played.replace('%battle_life_time%', battle_life_time)}
@@ -52,6 +63,15 @@
 
   .content {
     text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  a:hover {
+    text-decoration: underline;
   }
 
   input[type="range"] {

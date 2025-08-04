@@ -38,7 +38,7 @@
   <div class="signin content">
     <SignIn {providers}>
       {#snippet render(provider, signIn)}
-        <button type="button" onclick={() => signIn(provider, { realm: realm?.toLowerCase() === 'na' ? 'com' : realm })}
+        <button type="button" onclick={() => signIn(provider, { realm: realm.toLowerCase() === 'na' ? 'com' : realm })}
                 style:background-color={provider.color}
                 style:color={getTextColor(provider.color)}>
           <img src={provider.icon} alt={provider.id} height="32"/>
@@ -53,7 +53,7 @@
         </button>
       {/snippet}
 
-      {language.login.connect}
+      {language.connect.connect_with}
     </SignIn>
   </div>
 </div>

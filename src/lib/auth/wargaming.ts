@@ -5,10 +5,9 @@ import jwt from 'jsonwebtoken';
 
 export type WGToken = {
 	access_token: string;
+	account_id: string;
 	expires_at: number;
-	account_id: number;
-	nickname: string;
-	timer?: ReturnType<typeof setTimeout>;
+	realm: string;
 };
 
 export function genToken(payload: Record<string, string>): string {
@@ -35,33 +34,32 @@ const params = new URLSearchParams({
 const issuer = new URL('https://api.worldoftanks._realm_/wot/auth/login/');
 issuer.search = params;
 
-function timer(token: WGToken, realm: string) {
+export function timer(token: WGToken) {
 	// Refresh le token avant son expiration
 	return setTimeout(
-		(): ReturnType<typeof refreshToken> => refreshToken(token, realm),
+		(): ReturnType<typeof refreshToken> => refreshToken(token),
 		token.expires_at - Date.now() - 60000 // 60 secondes avant l'expiration
 	);
 }
 
-export async function refreshToken(token: WGToken, realm: string): Promise<WGToken> {
-	const url = new URL(`https://api.worldoftanks.${realm}/wot/auth/prolongate/`);
+export async function refreshToken(token: WGToken): Promise<WGToken> {
+	const url = new URL(`https://api.worldoftanks.${token.realm}/wot/auth/prolongate/`);
 	url.searchParams.set('application_id', CLIENT_ID);
 	url.searchParams.set('access_token', token.access_token);
 	const res = await fetch(url);
-	const data = await res.json();
-	const _token = { ...token, ...data };
-	return { ..._token, timer: timer(_token, realm) };
+	const { access_token, expires_at, account_id } = await res.json();
+	return { access_token, account_id, expires_at, realm: token.realm };
 }
 
-export async function revokeToken(token: WGToken, realm: string): Promise<boolean> {
-	const url = new URL(`https://api.worldoftanks.${realm}/wot/auth/logout/`);
-	url.searchParams.set('application_id', CLIENT_ID);
-	url.searchParams.set('access_token', token.access_token);
-	const res = await fetch(url);
-	if (res.ok) {
-		clearTimeout(token.timer);
+export async function revokeToken(token: WGToken): Promise<boolean> {
+	if (token) {
+		const url = new URL(`https://api.worldoftanks.${token.realm}/wot/auth/logout/`);
+		url.searchParams.set('application_id', CLIENT_ID);
+		url.searchParams.set('access_token', token.access_token);
+		const res = await fetch(url);
+		return res.ok;
 	}
-	return res.ok;
+	return false;
 }
 
 const wg = {
@@ -79,6 +77,11 @@ if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 		if (event.url.pathname === '/api' + callback) {
 			const realm = event.url.searchParams.get('realm') || 'eu';
 			throw redirect(302, issuer.toString().replace('_realm_', realm));
+		} else if (event.url.pathname === '/auth/logout') {
+			const token = verifToken(event.cookies.get(cookieName) || '') || {};
+			event.cookies.delete(cookieName, { path: '/' });
+			await revokeToken(token as unknown as WGToken);
+			throw redirect(302, '/login');
 		} else if (event.url.pathname === callback) {
 			const { realm } = verifToken(event.cookies.get(cookieName) || '') || { realm: 'eu' };
 			const expires_in = Math.floor(
