@@ -1,7 +1,7 @@
 import { CLIENT_ID, ORIGIN, SECRET } from '$env/static/private';
 import { handlers, type Provider, providers } from '$lib/auth';
 import { redirect } from '@sveltejs/kit';
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 
 export type WGToken = {
 	access_token: string;
@@ -10,8 +10,8 @@ export type WGToken = {
 	realm: string;
 };
 
-export function genToken(payload: Record<string, string>): string {
-	return jwt.sign(payload, SECRET, { expiresIn: '1d' });
+export function genToken(payload: Record<string, string>, options?: SignOptions): string {
+	return jwt.sign(payload, SECRET, options);
 }
 
 // Vérifie que les informations d'un JWT sont correctes
@@ -94,7 +94,8 @@ if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 			await revokeToken(token as unknown as WGToken);
 			throw redirect(302, '/login');
 		} else if (event.url.pathname === callback) {
-			const { realm } = verifToken(event.cookies.get(cookieName) || '') || { realm: 'eu' };
+			const token = verifToken(event.cookies.get(cookieName) || '') || { realm: 'eu', debug: true };
+			const { realm } = token as unknown as WGToken;
 			const expires_in = Math.floor(
 				Number(event.url.searchParams.get('expires_at')) - Date.now() / 1000
 			);
@@ -102,12 +103,20 @@ if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 			for (const param of authFields) {
 				payload[param] = event.url.searchParams.get(param) || '';
 			}
-			event.cookies.set(cookieName, genToken(payload), {
-				path: '/',
-				httpOnly: true,
-				maxAge: expires_in,
-				secure: true
-			});
+			event.cookies.set(
+				cookieName,
+				genToken(payload, {
+					expiresIn:
+						(Number(event.url.searchParams.get('expires_at')) || (Date.now() / 1000)) -
+						Date.now() / 1000
+				}),
+				{
+					path: '/',
+					httpOnly: true,
+					maxAge: expires_in,
+					secure: true
+				}
+			);
 			throw redirect(302, '/');
 		}
 		return resolve(event);
