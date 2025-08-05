@@ -31,14 +31,14 @@
   </div>
   <div class="content">
     <h3>
-      {language.blt.time_played.replace('%battle_life_time%', battle_life_time)}
-      <br/>
-      {language.blt.as_hour.replace('%as_hour%', as_hour)}
+      {language.blt.created_at.replace('%created_at%', created_at)}
     </h3>
   </div>
   <div class="content">
     <h3>
-      {language.blt.created_at.replace('%created_at%', created_at)}
+      {language.blt.time_played.replace('%battle_life_time%', battle_life_time)}
+      <br/>
+      {language.blt.as_hour.replace('%as_hour%', as_hour)}
     </h3>
   </div>
   <div class="content">
