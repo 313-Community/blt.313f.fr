@@ -86,6 +86,7 @@ if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 	handlers.push(async ({ event, resolve }) => {
 		if (event.url.pathname === '/api' + callback) {
 			const realm = event.url.searchParams.get('realm') || 'eu';
+			event.cookies.set(cookieName, genToken({ realm }), { path: '/' });
 			throw redirect(302, issuer.toString().replace('_realm_', realm));
 		} else if (event.url.pathname === '/auth/logout') {
 			const token = verifToken(event.cookies.get(cookieName) || '') || {};
