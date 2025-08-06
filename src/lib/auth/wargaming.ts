@@ -103,20 +103,12 @@ if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 			for (const param of authFields) {
 				payload[param] = event.url.searchParams.get(param) || '';
 			}
-			event.cookies.set(
-				cookieName,
-				genToken(payload, {
-					expiresIn:
-						(Number(event.url.searchParams.get('expires_at')) || (Date.now() / 1000)) -
-						Date.now() / 1000
-				}),
-				{
-					path: '/',
-					httpOnly: true,
-					maxAge: expires_in,
-					secure: true
-				}
-			);
+			event.cookies.set(cookieName, genToken(payload, { expiresIn: '1d' }), {
+				path: '/',
+				httpOnly: true,
+				maxAge: expires_in,
+				secure: true
+			});
 			throw redirect(302, '/');
 		}
 		return resolve(event);
