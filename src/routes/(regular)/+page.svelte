@@ -14,7 +14,7 @@
   const created_at = $derived(new Date(_created).toLocaleString());
   const percentage = $derived(Math.round(1000 * _blt / (Date.now() - _created)) / 10);
   const nickname = $derived(data.nickname);
-  const realm = $derived(data.realm);
+  const realm = $derived(data.realm === 'com' ? 'na' : data.realm);
 
   const language = $derived(languages[_lang]);
 </script>
