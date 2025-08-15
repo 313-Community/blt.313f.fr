@@ -103,7 +103,7 @@ if (!providers.some((provider: Provider) => provider.id === wg.id)) {
 			for (const param of authFields) {
 				payload[param] = event.url.searchParams.get(param) || '';
 			}
-			event.cookies.set(cookieName, genToken(payload, { expiresIn: '1d' }), {
+			event.cookies.set(cookieName, genToken(payload), {
 				path: '/',
 				httpOnly: true,
 				maxAge: expires_in,
