@@ -56,7 +56,6 @@
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
-    overflow: hidden;
     background-size: cover;
     gap: 2rem;
   }
